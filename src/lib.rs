@@ -502,55 +502,57 @@ mod tests {
     }
 
 }
-extern crate test;
-use self::test::Bencher;
-use std::sync::Arc;
-use std::thread;
-#[bench]
-fn insert(b: &mut Bencher) {
-    b.iter(|| {
-        let skip_map: SkipMap<usize, usize> = SkipMap::new();
-        for i in 0..1_000 {
-            skip_map.insert(i, i);
-        }
-    });
-}
-#[bench]
-fn insert_concurrent(b: &mut Bencher) {
-    b.iter(|| {
-        let skip_map: SkipMap<usize, usize> = SkipMap::new();
-        let arc_list = Arc::new(skip_map);
-        let mut threads = Vec::new();
-        let list = arc_list.clone();
-        let t = thread::spawn(move || {
-            for i in 0..250 {
-                list.insert(i, i);
+mod bench {
+    extern crate test;
+    use self::test::Bencher;
+    use std::sync::Arc;
+    use std::thread;
+    #[bench]
+    fn insert(b: &mut Bencher) {
+        b.iter(|| {
+            let skip_map: SkipMap<usize, usize> = SkipMap::new();
+            for i in 0..1_000 {
+                skip_map.insert(i, i);
             }
         });
-        threads.push(t);
-        let list = arc_list.clone();
-        let t = thread::spawn(move || {
-            for i in 251..500 {
-                list.insert(i, i);
+    }
+    #[bench]
+    fn insert_concurrent(b: &mut Bencher) {
+        b.iter(|| {
+            let skip_map: SkipMap<usize, usize> = SkipMap::new();
+            let arc_list = Arc::new(skip_map);
+            let mut threads = Vec::new();
+            let list = arc_list.clone();
+            let t = thread::spawn(move || {
+                for i in 0..250 {
+                    list.insert(i, i);
+                }
+            });
+            threads.push(t);
+            let list = arc_list.clone();
+            let t = thread::spawn(move || {
+                for i in 251..500 {
+                    list.insert(i, i);
+                }
+            });
+            threads.push(t);
+            let list = arc_list.clone();
+            let t = thread::spawn(move || {
+                for i in 501..750 {
+                    list.insert(i, i);
+                }
+            });
+            threads.push(t);
+            let list = arc_list.clone();
+            let t = thread::spawn(move || {
+                for i in 751..1000 {
+                    list.insert(i, i);
+                }
+            });
+            threads.push(t);
+            for t in threads {
+                t.join().unwrap();
             }
-        });
-        threads.push(t);
-        let list = arc_list.clone();
-        let t = thread::spawn(move || {
-            for i in 501..750 {
-                list.insert(i, i);
-            }
-        });
-        threads.push(t);
-        let list = arc_list.clone();
-        let t = thread::spawn(move || {
-            for i in 751..1000 {
-                list.insert(i, i);
-            }
-        });
-        threads.push(t);
-        for t in threads {
-            t.join().unwrap();
-        }
-    })
+        })
+    }
 }
