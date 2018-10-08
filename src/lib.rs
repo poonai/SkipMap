@@ -509,17 +509,17 @@ use std::thread;
 #[bench]
 fn insert(b: &mut Bencher) {
     b.iter(|| {
-        let SkipMap: SkipMap<usize, usize> = SkipMap::new();
+        let skip_map: SkipMap<usize, usize> = SkipMap::new();
         for i in 0..1_000 {
-            SkipMap.insert(i, i);
+            skip_map.insert(i, i);
         }
     });
 }
 #[bench]
 fn insert_concurrent(b: &mut Bencher) {
     b.iter(|| {
-        let SkipMap: SkipMap<usize, usize> = SkipMap::new();
-        let arc_list = Arc::new(SkipMap);
+        let skip_map: SkipMap<usize, usize> = SkipMap::new();
+        let arc_list = Arc::new(skip_map);
         let mut threads = Vec::new();
         let list = arc_list.clone();
         let t = thread::spawn(move || {

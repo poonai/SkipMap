@@ -2,5 +2,5 @@
 name = "skipmap"
 version = "0.1.0"
 authors = ["balaji <balaji@avinetworks.com>"]
-
+description = "lockfree concurrent insert only skipmap"
 [dependencies]
