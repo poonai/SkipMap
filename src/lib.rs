@@ -273,6 +273,8 @@ impl<K: Ord + Clone, V: Clone> SkipMap<K, V> {
             }
         }
     }
+
+    /// get it from skipmap
     pub fn get(&self, key: &K) -> Option<&V> {
         match self.find(key) {
             Some(node) => {
