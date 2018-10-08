@@ -1,0 +1,6 @@
+[package]
+name = "skipmap"
+version = "0.1.0"
+authors = ["balaji <balaji@avinetworks.com>"]
+
+[dependencies]
