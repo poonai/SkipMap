@@ -28,5 +28,5 @@ test insert_concurrent ... bench:   1,494,069 ns/iter (+/- 164,952)
  let skip_map: SkipMap<String, String> = SkipMap::new();
  skip_map.insert(String::from("a"), String::from("1"));
  skip_map.insert(String::from("b"), String::from("2"))
- assert_eq!(skip_map.get(&String::from("a")).expect("expected 4"), "1");
+ assert_eq!(skip_map.get(&String::from("a")).expect("expected 1"), "1");
 ```
