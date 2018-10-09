@@ -45,9 +45,14 @@ impl<K: Ord + Clone, V> Node<K, V> {
         };
         let node = alloc as *mut Node<K, V>;
         unsafe {
-            (*node).key = key;
-            (*node).value = val;
-            (*node).lanes = mem::zeroed();
+            std::ptr::write(
+                node,
+                Node {
+                    key: key,
+                    value: val,
+                    lanes: mem::zeroed(),
+                },
+            );
         }
         node as usize
     }
@@ -507,6 +512,7 @@ mod bench {
     use self::test::Bencher;
     use std::sync::Arc;
     use std::thread;
+    use SkipMap;
     #[bench]
     fn insert(b: &mut Bencher) {
         b.iter(|| {
